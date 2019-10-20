@@ -410,6 +410,9 @@ typedef NS_ENUM (NSUInteger,GHDropMenuShowType) {
     GHDropMenuModel *dropMenuSectionModel = [dropMenuTitleModel.sections by_ObjectAtIndex: dropMenuModel.indexPath.section];
     GHDropMenuModel *dropMenuTagModel = [dropMenuSectionModel.dataArray by_ObjectAtIndex:dropMenuModel.indexPath.row];
     dropMenuTagModel.singleInput = dropMenuModel.singleInput;
+    
+    //将搜索的内容做记录，保存至数组当中
+    //Todo~~~
 }
 
 - (void)dropMenuFilterEndInputItem:(GHDropMenuFilterInputItem *)item dropMenuModel:(GHDropMenuModel *)dropMenuModel {
@@ -430,11 +433,20 @@ typedef NS_ENUM (NSUInteger,GHDropMenuShowType) {
     alert.alertTitle = type == GHDropMenuFilterTimeChoseItemTypeBeginTime ?@"选择开始时间":@"选择结束时间";
     alert.positionType = GHCustomAlertViewPositionType_bottom;
     alert.timeBlock = ^(NSString *time) {
-        if (type == GHDropMenuFilterTimeChoseItemTypeBeginTime) {
-            dropMenuModel.beginTime = time;
+        if (!time) {
+            if (type == GHDropMenuFilterTimeChoseItemTypeBeginTime) {
+                dropMenuModel.beginTime = @"";
+            } else {
+                dropMenuModel.endTime = @"";
+            }
         } else {
-            dropMenuModel.endTime = time;
+            if (type == GHDropMenuFilterTimeChoseItemTypeBeginTime) {
+                dropMenuModel.beginTime = time;
+            } else {
+                dropMenuModel.endTime = time;
+            }
         }
+        
     };
     alert.dimissFinish = ^{
         [self.filter reloadData];
@@ -454,7 +466,12 @@ typedef NS_ENUM (NSUInteger,GHDropMenuShowType) {
 
 - (void)dropMenuFilterSectionHeader:(GHDropMenuFilterSectionHeader *)header
                       dropMenuModel:(GHDropMenuModel *)dropMenuModel {
-    dropMenuModel.sectionSeleted = !dropMenuModel.sectionSeleted;
+    if ([dropMenuModel.sectionHeaderDetails isEqualToString:@"删除"]) {
+        //删除历史搜索记录
+        //Todo...
+    } else {
+        dropMenuModel.sectionSeleted = !dropMenuModel.sectionSeleted;
+    }
     [self.filter reloadData];
 }
 
@@ -786,8 +803,11 @@ typedef NS_ENUM (NSUInteger,GHDropMenuShowType) {
             dropMenuSectionModel.sectionHeaderDetails = @"";
             for (GHDropMenuModel *dropMenuTagModel in dropMenuSectionModel.dataArray) {
                 dropMenuTagModel.tagSeleted = NO;
-                dropMenuTagModel.minPrice = @"";
-                dropMenuTagModel.maxPrice = @"";
+                //清除时间
+                dropMenuTagModel.beginTime = @"";
+                dropMenuTagModel.endTime = @"";
+                //清除输入记录
+                dropMenuTagModel.singleInput = @"";
             }
         }
         [self.filter reloadData];

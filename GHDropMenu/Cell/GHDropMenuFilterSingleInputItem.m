@@ -44,7 +44,7 @@
 }
 - (void)layoutSubviews {
     [super layoutSubviews];
-    CGFloat width = (self.frame.size.width - 2 * 10 - 10) / 2;
+    CGFloat width = (self.frame.size.width);
     self.textField.frame = CGRectMake(0, 0, width, self.frame.size.height);
     
 }

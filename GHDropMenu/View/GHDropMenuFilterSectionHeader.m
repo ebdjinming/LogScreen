@@ -23,8 +23,13 @@
 - (void)setDropMenuModel:(GHDropMenuModel *)dropMenuModel {
     _dropMenuModel = dropMenuModel;
     self.title.text = dropMenuModel.sectionHeaderTitle;
-    self.details.text = dropMenuModel.sectionHeaderDetails.length?dropMenuModel.sectionHeaderDetails:@"全部";
-    self.imageView.highlighted = dropMenuModel.sectionSeleted ? YES:NO;
+    if (dropMenuModel.isLogHistory) {
+        self.details.text = dropMenuModel.sectionHeaderDetails.length?dropMenuModel.sectionHeaderDetails:@"删除";
+        self.imageView.highlighted = YES;
+    } else {
+        self.details.text = dropMenuModel.sectionHeaderDetails.length?dropMenuModel.sectionHeaderDetails:@"全部";
+        self.imageView.highlighted = dropMenuModel.sectionSeleted ? YES:NO;
+    }
     self.details.hidden = (dropMenuModel.filterCellType == GHDropMenuFilterCellTypeInput  ||
                            dropMenuModel.filterCellType == GHDropMenuFilterCellTypeSingleInput ||
                              dropMenuModel.filterCellType == GHDropMenuFilterCellTypeTimeChose ||

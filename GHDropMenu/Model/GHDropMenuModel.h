@@ -34,6 +34,8 @@ typedef NS_ENUM (NSUInteger,GHDropMenuType ) {
     GHDropMenuTypeOptionCollection,
     GHDropMenuTypeWaterFall,
 };
+
+
 /** 筛选菜单模型 */
 @interface GHDropMenuModel : NSObject
 @property (nonatomic , strong) NSArray *waterFallTags;
@@ -106,6 +108,10 @@ typedef NS_ENUM (NSUInteger,GHDropMenuType ) {
 @property (nonatomic , copy) NSString *beginTime;
 /** 结束时间 */
 @property (nonatomic , copy) NSString *endTime;
+/** log开关状态 */
+@property (nonatomic, assign) BOOL logSwitch;
+/** 标识是否为历史记录 可删除 */
+@property (nonatomic, assign) BOOL isLogHistory;
 
 /** 构造筛选菜单数据 */
 - (NSMutableArray *)creaDropMenuData;

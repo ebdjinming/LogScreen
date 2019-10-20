@@ -100,11 +100,16 @@
 
 - (void)clickButton: (UIButton *)button {
     [self dismiss];
-    if (self.time.length == 0) {
-        self.time = [self timeDateToString:self.picker.date];
-    }
-    if (self.timeBlock) {
-        self.timeBlock(self.time);
+    //如果点击取消按钮，则直接返回
+    if (button.tag == GHCustomAlertViewButtonType_cancel) {
+        self.timeBlock(nil);
+    } else if (button.tag == GHCustomAlertViewButtonType_sure) {
+        if (self.time.length == 0) {
+            self.time = [self timeDateToString:self.picker.date];
+        }
+        if (self.timeBlock) {
+            self.timeBlock(self.time);
+        }
     }
 }
 
@@ -112,7 +117,7 @@
     
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc]init];
     
-    [dateFormat setDateFormat:@"yyyy-MM-dd"];
+    [dateFormat setDateFormat:@"MM-dd HH:mm"];
     
     NSString *string = [dateFormat stringFromDate:date];
     
@@ -194,7 +199,7 @@
         [_picker setLocale:[[NSLocale alloc]initWithLocaleIdentifier:@"zh_Hans_CN"]];
         [_picker setCalendar:[NSCalendar currentCalendar]];
         [_picker setDate:[NSDate date]];
-        _picker.datePickerMode = UIDatePickerModeDate;
+        _picker.datePickerMode = UIDatePickerModeDateAndTime;
         [_picker addTarget:self action:@selector(dateChange:)forControlEvents:UIControlEventValueChanged];
     }
     return _picker;

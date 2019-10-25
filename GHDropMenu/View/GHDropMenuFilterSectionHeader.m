@@ -15,6 +15,7 @@
 @property (nonatomic , strong) UILabel *title;
 @property (nonatomic , strong) UILabel *details;
 @property (nonatomic , strong) UIImageView *imageView;
+@property (nonatomic , strong) UIImageView *imageViewDelete;
 
 @end
 
@@ -25,7 +26,7 @@
     self.title.text = dropMenuModel.sectionHeaderTitle;
     if (dropMenuModel.isLogHistory) {
         self.details.text = dropMenuModel.sectionHeaderDetails.length?dropMenuModel.sectionHeaderDetails:@"删除";
-        self.imageView.highlighted = YES;
+        self.imageViewDelete.highlighted = YES;
     } else {
         self.details.text = dropMenuModel.sectionHeaderDetails.length?dropMenuModel.sectionHeaderDetails:@"全部";
         self.imageView.highlighted = dropMenuModel.sectionSeleted ? YES:NO;
@@ -60,8 +61,11 @@
 - (void)setupUI {
     [self addSubview:self.title];
     [self addSubview:self.details];
-    [self addSubview:self.imageView];
-    
+    if (self.dropMenuModel.isLogHistory) {
+        [self addSubview:self.imageViewDelete];
+    } else {
+        [self addSubview:self.imageView];
+    }
 }
 - (void)layoutSubviews {
     [super layoutSubviews];
@@ -69,8 +73,6 @@
     CGSize detailsSize = [self.details.text sizeWithFont:[UIFont boldSystemFontOfSize:11] maxSize:CGSizeMake(MAXFLOAT, self.frame.size.height)];
     
     self.title.frame = CGRectMake(10, 0, titleSize.width, self.frame.size.height);
-    self.imageView.frame = CGRectMake(self.frame.size.width - 10 - 10, (self.frame.size.height - 5 ) * 0.5, 10, 5);
-    
     self.details.frame = CGRectMake(self.frame.size.width - 10 - 15 - (self.frame.size.width - 10 - 15 - detailsSize.width), 0,self.frame.size.width - 10 - 15 - detailsSize.width, self.frame.size.height);
 }
 - (UIImageView *)imageView {
@@ -78,8 +80,18 @@
         _imageView = [[UIImageView alloc]init];
         _imageView.image = [UIImage imageNamed:@"expand_down"];
         _imageView.highlightedImage = [UIImage imageNamed:@"expand_up"];
+        self.imageView.frame = CGRectMake(self.frame.size.width - 10 - 10, (self.frame.size.height - 5) * 0.5, 10, 5);
     }
     return _imageView;
+}
+- (UIImageView *)imageViewDelete {
+    if (_imageViewDelete == nil) {
+        _imageViewDelete = [[UIImageView alloc]init];
+        _imageViewDelete.image = [UIImage imageNamed:@"delete"];
+        _imageViewDelete.highlightedImage = [UIImage imageNamed:@"delete"];
+        self.imageViewDelete.frame = CGRectMake(self.frame.size.width - 10 - 15, (self.frame.size.height - 15) * 0.5, 15, 15);
+    }
+    return _imageViewDelete;
 }
 - (UILabel *)details {
     if (_details == nil) {

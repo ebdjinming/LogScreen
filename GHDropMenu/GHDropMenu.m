@@ -36,7 +36,7 @@ typedef NS_ENUM (NSUInteger,GHDropMenuShowType) {
     GHDropMenuShowTypeOnlyFilter,
 };
 
-@interface GHDropMenu()<UICollectionViewDelegate,UICollectionViewDataSource,UITableViewDataSource,UITableViewDelegate,GHDropMenuFilterTagItemDelegate,GHDropMenuFilterInputItemDelegate,GHDropMenuFilterSingleInputItemDelegate,GHDropMenuTitleItemDelegate,GHDropMenuFilterSectionHeaderDelegate,GHDropMenuFilterTimeChoseItemDelegate>
+@interface GHDropMenu()<UICollectionViewDelegate,UICollectionViewDataSource,UITableViewDataSource,UITableViewDelegate,GHDropMenuFilterTagItemDelegate,GHDropMenuFilterInputItemDelegate,GHDropMenuFilterSingleInputItemDelegate,GHDropMenuTitleItemDelegate,GHDropMenuFilterSectionHeaderDelegate,GHDropMenuFilterTimeChoseItemDelegate,GHDropMenuFilterSwitchDelegate>
 
 /** 顶部菜单 */
 @property (nonatomic , strong) UICollectionView *collectionView;
@@ -466,13 +466,24 @@ typedef NS_ENUM (NSUInteger,GHDropMenuShowType) {
 
 - (void)dropMenuFilterSectionHeader:(GHDropMenuFilterSectionHeader *)header
                       dropMenuModel:(GHDropMenuModel *)dropMenuModel {
-    if ([dropMenuModel.sectionHeaderDetails isEqualToString:@"删除"]) {
+    if (dropMenuModel.isLogHistory) {
         //删除历史搜索记录
-        //Todo...
+        //Todo 考虑将NSArray替换为NSMutableArray!!!
+        if([dropMenuModel.dataArray count] > 0) {
+            //清空数据内容
+            dropMenuModel.dataArray = [NSArray array];
+        }
     } else {
         dropMenuModel.sectionSeleted = !dropMenuModel.sectionSeleted;
     }
     [self.filter reloadData];
+}
+
+#pragma mark - switch点击方法
+- (void)dropMenuFilterSwitch: (GHDropMenuFilterSwitch *)switchItem dropMenuModel:(GHDropMenuModel *)dropMenuModel {
+    dropMenuModel.logSwitch = !dropMenuModel.logSwitch;
+    //Todo~~~
+    //本地保存此配置选项
 }
 
 #pragma mark - tag标签点击方法
@@ -759,7 +770,7 @@ typedef NS_ENUM (NSUInteger,GHDropMenuShowType) {
         } else if (dropMenuSectionModel.filterCellType == GHDropMenuFilterCellTypeSwitch) {
             GHDropMenuFilterSwitch *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"GHDropMenuFilterSwitchID" forIndexPath:indexPath];
             cell.dropMenuModel = dropMenuTagModel;
-            //cell.delegate = self;
+            cell.delegate = self;
             return cell;
         } else {
             return [collectionView dequeueReusableCellWithReuseIdentifier:@"UICollectionViewCellID" forIndexPath:indexPath];

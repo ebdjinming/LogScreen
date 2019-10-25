@@ -19,6 +19,8 @@
 
 - (void)setDropMenuModel:(GHDropMenuModel *)dropMenuModel {
     _dropMenuModel = dropMenuModel;
+    _switchItem.on = dropMenuModel.logSwitch;
+    [self setupUI];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -29,13 +31,17 @@
 }
 
 - (void)setupUI {
-    self.switchItem = [[UISwitch alloc] init];
     _switchItem.frame = CGRectMake(20, 0, 80, 40);
-    //默认关闭
-    _switchItem.on = NO;
     //设置点击事件
     [_switchItem addTarget:self action:@selector(swChange) forControlEvents:UIControlEventValueChanged];
     [self addSubview:self.switchItem];
+}
+
+- (UISwitch *)switchItem {
+    if (_switchItem == nil) {
+        _switchItem = [[UISwitch alloc] init];
+    }
+    return _switchItem;
 }
 
 - (void)swChange {
